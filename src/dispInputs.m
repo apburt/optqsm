@@ -14,7 +14,7 @@ function [] = dispInputs(inputs)
     disp(unique([inputs.lcyl]));
     disp('N per param set:');
     disp(length(inputs)/(length(unique([inputs.PatchDiam1]))*length(unique([inputs.PatchDiam2Min]))*length(unique([inputs.PatchDiam2Max]))*length(unique([inputs.lcyl]))));
-    disp('QSMs to be constructed: ');
+    disp('QSMs to be constructed (may be less after invalid param sets are pruned): ');
     disp(length(inputs));
 end
 

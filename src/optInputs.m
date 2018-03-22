@@ -23,7 +23,7 @@ function [inputs] = optInputs(cname,dNNz1,dNNz2)
     %lcyl values
     lcyl = [3;4;5];
     %iterations per param set
-    N = 10;
+    N = 5;
     i = 1;
     for j = pd1Start : pd1Int : pd1End
         for k = pd2MinStart : pd2MinInt : pd2MinEnd
@@ -47,10 +47,9 @@ function [inputs] = optInputs(cname,dNNz1,dNNz2)
                         input.TaperCor = 1;
                         input.GrowthVolCor = 0;
                         input.GrowthVolFrac = 2.5;
-                        tname = string(cname);
-                        tmp1 = strsplit(tname,"/");
-                        tmp2 = strsplit(tmp1(length(tmp1)),".");
-                        mname = strcat(tmp2(1),'-',string(i));
+                        tmp1 = strsplit(char(cname),'/');
+                        tmp2 = strsplit(char(tmp1(length(tmp1))),'.');
+                        mname = char(strcat(tmp2(1),'-',num2str(i))); 
                         input.name = mname;
                         input.tree = 1;
                         input.model = i;%N;

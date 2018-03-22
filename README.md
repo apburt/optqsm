@@ -25,7 +25,7 @@ The following modifications are required to [INSTALLATION_DIR]/TreeQSM/src/main_
 * Line 258--306 require commenting out.
 * If cubic metre is preferred as the output unit of volume, lines 59--61 require removal of 1000x.
 
-optqsm can then be installed as
+optqsm can then be installed as:
 
 ```
 git clone https://github.com/apburt/optqsm.git;
@@ -35,8 +35,8 @@ The paths to both TreeQSM and optqsm must then be set in MATLAB, e.g.,:
 
 ```
 matlab -nodisplay;
-addpath(genpath('[INSTALLATION_DIR]/treeqsm/TreeQSM-2.30/src'));
-addpath('[INSTALLATION_DIR]/optqsm/src');
+addpath(genpath('[INSTALLATION_DIR]/TreeQSM/src/'));
+addpath('[INSTALLATION_DIR]/optqsm/src/');
 savepath();
 ```
 
@@ -66,20 +66,20 @@ cd ../;
 matlab -nodisplay -r "runopt('./intermediate/*.mat')";
 ```
 
-Where workers (int) specifies the number of workers in the local parallel pool (if > 1).
+Where workers is an integer specifying the number of workers in the local parallel pool that is initialised if greater than 1.
 
 When run as above, each .mat inside [PROCESSING DIR]/models/ contains the optimised QSM + supplementary data per tree.
 The definition of parameters inside this .mat can be found in TreeQSM/src/treeqsm.m.
 This .mat can be interacted with outside MATLAB, e.g., in Python with scipy.io.loadmat() (although care is required with MATLAB not using zero-based arrays).
 
-By default, optqsm samples the parameter space (PatchDiam1,PatchDiam2Min,PatchDiam2Max,lcyl) defined in optqsm/src/optInputs.m, constructing 3750 models per tree.
+By default, optqsm samples the parameter space (PatchDiam1,PatchDiam2Min,PatchDiam2Max,lcyl) defined in optqsm/src/optInputs.m, constructing ~1875 models per tree (minus any invalid parameter sets).
 These values have been shown across various data to capture most of the valid parameter space, but can be readily modified to increase/reduce computation.
 
 If it not possible to permanently set the MATLAB path, the two calls to MATLAB must be modified as:
 
 ```
-matlab -nodisplay -r "addpath('[INSTALLATION_DIR]/treeqsm/TreeQSM-2.30/src');addpath'[INSTALLATION_DIR]/optqsm/src');runqsm('../clouds/*.txt',workers)";
-matlab -nodisplay -r "addpath('[INSTALLATION_DIR]/treeqsm/TreeQSM-2.30/src');addpath'[INSTALLATION_DIR]/optqsm/src');runopt('./intermediate/*.mat')";
+matlab -nodisplay -r "addpath(genpath('[INSTALLATION_DIR]/TreeQSM/src/'));addpath('[INSTALLATION_DIR]/optqsm/src/');runqsm('../clouds/*.txt',workers)";
+matlab -nodisplay -r "addpath(genpath('[INSTALLATION_DIR]/TreeQSM/src/'));addpath('[INSTALLATION_DIR]/optqsm/src/');runopt('./intermediate/*.mat')";
 ```
 
 ## Authors

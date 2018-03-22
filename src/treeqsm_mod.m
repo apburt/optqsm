@@ -43,7 +43,6 @@ function [] = treeqsm_mod(P,inputs)
             pmdis = point_model_distance(P,cylinder);
         end
         Date(2,:) = clock;
-        clear qsm;
         qsm = struct('cylinder',{},'branch',{},'treedata',{},'rundata',{},'pmdistance',{},'triangulation',{});
         qsm(1).cylinder = cylinder;
         qsm(1).branch = branch;
@@ -57,4 +56,5 @@ function [] = treeqsm_mod(P,inputs)
             qsm(1).triangulation = triangulation;
         end
         save([inputs.name],'qsm');
+    end
 end
