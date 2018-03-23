@@ -1,7 +1,8 @@
 % Andrew Burt - a.burt@ucl.ac.uk
 
-function [] = runqsm(single_string_path_to_clouds,workers)
-	[directory,fnames,uniquenames] = sortFileNames(single_string_path_to_clouds);
+function [] = runqsm(SINGLE_PATH_TO_CLOUDS,workers)
+    MAX_ITER_PER_POOL = 100;
+	[~,fnames,~] = sortFileNames(SINGLE_PATH_TO_CLOUDS);
 	for i=1:length(fnames)
 		cloud = load(char(fnames(i)));
 		dNNz1 = dNNz(cloud,3,2.5);       
@@ -17,16 +18,20 @@ function [] = runqsm(single_string_path_to_clouds,workers)
 				end
 			end
 		elseif workers > 1
-			%opening pool here rather than at top as irregularly goes stale
-			openParPool(workers);
-			parfor j=1:length(inputs)
-				if validInput(inputs(j)) == true
-					if exist(strcat(inputs(j).name,'.mat'),'file') == 0
-						treeqsm_mod(cloud,inputs(j));
-					end
-				end
-			end
-			delete(gcp('nocreate'));
-        	end
+            %this is required due to memory leak and pool irregularly going stale
+            for j=1:MAX_ITER_PER_POOL:(length(inputs)+MAX_ITER_PER_POOL)
+                P = openParPool(workers);
+                parfor k=j:j+MAX_ITER_PER_POOL
+                    if k <= length(inputs)
+                        if validInput(inputs(k)) == true
+                            if exist(strcat(inputs(k).name,'.mat'),'file') == 0
+                                treeqsm_mod(cloud,inputs(k));
+                            end
+                        end
+                    end
+                end
+                delete(P);
+            end
+        end
 	end
 end

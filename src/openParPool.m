@@ -1,8 +1,8 @@
 % Andrew Burt - a.burt@ucl.ac.uk
 
-function [] = openParPool(workers)
-    pool = parcluster('local');
-    pool.NumWorkers = workers;
-    parpool(pool,pool.NumWorkers);
+function [pool] = openParPool(workers)
+    p = parcluster('local');
+    p.NumWorkers = workers;
+    pool = parpool(p,p.NumWorkers);
 end
 

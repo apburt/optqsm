@@ -1,7 +1,7 @@
 % Andrew Burt - a.burt@ucl.ac.uk
 
-function [] = runopt(single_string_path_to_models)
-	[directory,fnames,uniquenames] = sortFileNames(single_string_path_to_models);
+function [] = runopt(SINGLE_PATH_TO_MODELS)
+	[directory,~,uniquenames] = sortFileNames(SINGLE_PATH_TO_MODELS);
 	for i = 1:length(uniquenames)
 		qsm = struct('cylinder',{},'branch',{},'treedata',{},'rundata',{},'pmdistance',{},'triangulation',{});
 		modelnames = dir([directory char(uniquenames(i)) '-*.mat']);
