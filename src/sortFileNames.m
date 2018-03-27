@@ -1,4 +1,4 @@
-% Andrew Burt - a.burt@ucl.ac.uk
+%Andrew Burt - a.burt@ucl.ac.uk
 
 function [directory,fnames,uniquenames] = sortFileNames(single_string_path)
 	files = dir(single_string_path);

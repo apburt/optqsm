@@ -1,4 +1,4 @@
-% Andrew Burt - a.burt@ucl.ac.uk
+%Andrew Burt - a.burt@ucl.ac.uk
 
 function [] = runopt(SINGLE_PATH_TO_MODELS)
 	[directory,~,uniquenames] = sortFileNames(SINGLE_PATH_TO_MODELS);
