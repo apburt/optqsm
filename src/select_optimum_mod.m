@@ -15,7 +15,7 @@
 %
 % Copyright (C) 2013-2017 Pasi Raumonen
 
-function [TreeData,OptModels,OptInputs] = select_optimum_mod(QSMs,savename)
+function [vol,stddev] = select_optimum_mod(QSMs,savename)
 
 % ---------------------------------------------------------------------
 % treeqsm_mod.M     Version of select_optimum.m modified for optqsm
@@ -208,3 +208,6 @@ if nargin == 2
     str = [savename];
     save(str,'qsm','treedata','models','inputs')
 end
+
+vol = DataM(1,1);
+stddev = DataS(1,1);

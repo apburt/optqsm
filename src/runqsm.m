@@ -3,7 +3,7 @@
 function [] = runqsm(SINGLE_PATH_TO_CLOUDS,workers)
 	MAX_ITER_PER_POOL = 250;
 	MAX_TIME_PER_ITER = 60*60*5;
-	[~,fnames,~] = sortFileNames(SINGLE_PATH_TO_CLOUDS);
+	[~,fnames,~,~] = sortFileNames(SINGLE_PATH_TO_CLOUDS);
 	for i=1:length(fnames)
 		cloud = load(char(fnames(i)));
 		dNNz1 = dNNz(cloud,3,2.5);       
