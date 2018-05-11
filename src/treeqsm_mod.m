@@ -22,6 +22,7 @@ function [] = treeqsm_mod(P,inputs)
 %                   Andrew Burt - a.burt@ucl.ac.uk
 % ---------------------------------------------------------------------
 
+	rng('shuffle');
 	cover1 = cover_sets(P,inputs);
 	[cover1,Base,Forb] = tree_sets(P,cover1,inputs);
 	segment1 = segments(cover1,Base,Forb);
