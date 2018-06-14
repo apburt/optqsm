@@ -6,7 +6,7 @@ function [directory,fnames,uniquenames,plotname] = sortFileNames(single_string_p
 	directory = fliplr(remain);
 	fnames = {};
 	count = 1;
-	for i = 3:length(files) %!
+	for i = 1:length(files) %!
 		fnames(count) = {[directory files(i).name]};
 		count = count + 1;
 	end

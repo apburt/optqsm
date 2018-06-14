@@ -2,23 +2,24 @@
 
 function [inputs] = optInputs(cname,dNNz1,dNNz2)
 	inputs = struct([]);
-	%variation in considered patch sizes: 75-125%
+	%variation in considered pd1 patch sizes: 100-150%
 	pd1 = round(max(dNNz1),3); 
 	pd1Steps = 5;
-	pd1Start = pd1 * 0.75;
-	pd1End = pd1 * 1.25;
+	pd1Start = pd1 * 1;
+	pd1End = pd1 * 1.5;
 	pd1Int =  (pd1End - pd1Start) / (pd1Steps-1);
 	%
+	%variation in considered pd2 patch sizes: 100-200%
 	pd2Min = round(min(dNNz2),3);
 	pd2Max = round(max(dNNz2),3);
 	pd2Steps = 5;
 	%
-	pd2MinStart = pd2Min * 0.75;
-	pd2MinEnd = pd2Min * 1.25;
+	pd2MinStart = pd2Min * 1;
+	pd2MinEnd = pd2Min * 2;
 	pd2MinInt = (pd2MinEnd - pd2MinStart) / (pd2Steps-1);
 	%
-	pd2MaxStart = pd2Max * 0.75;
-	pd2MaxEnd = pd2Max * 1.5;
+	pd2MaxStart = pd2Max * 1;
+	pd2MaxEnd = pd2Max * 2;
 	pd2MaxInt = (pd2MaxEnd - pd2MaxStart) / (pd2Steps-1);
 	%lcyl values
 	lcyl = [3;4;5];
