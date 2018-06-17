@@ -4,13 +4,13 @@ function [] = runopt(SINGLE_PATH_TO_MODELS)
 	[directory,~,uniquenames,plotname] = sortFileNames(SINGLE_PATH_TO_MODELS);
 	results = struct('lid',{},'vol',{},'stddev',{});
 	for i = 1:length(uniquenames)
-		qsm = struct('cylinder',{},'branch',{},'treedata',{},'rundata',{},'pmdistance',{},'triangulation',{});
+		qsms = struct('cylinder',{},'branch',{},'treedata',{},'rundata',{},'pmdistance',{},'triangulation',{});
 		modelnames = dir([directory char(uniquenames(i)) '-*.mat']);
 		for j = 1:length(modelnames)
 			model = load([directory modelnames(j).name]);
-			qsm(j) = model.qsm;
+			qsms(j) = model.qsm;
         end
-		[vol,stddev] = select_optimum_mod(qsm,char(uniquenames(i)));
+        [vol,stddev] = selectOpt(qsms,char(uniquenames(i)));
 		results(i).lid = char(uniquenames(i));
 		results(i).vol = vol;
 		results(i).stddev = stddev;

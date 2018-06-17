@@ -72,7 +72,7 @@ When run as above, each .mat inside [PROCESSING DIR]/models/ contains the optimi
 The definition of parameters inside this .mat can be found in TreeQSM/src/treeqsm.m.
 This .mat can be interacted with outside MATLAB, e.g., in Python with scipy.io.loadmat() (although care is required with MATLAB not using zero-based arrays).
 
-By default, optqsm samples the parameter space (PatchDiam1,PatchDiam2Min,PatchDiam2Max,lcyl) defined in optqsm/src/optInputs.m, constructing ~1875 models per tree (minus any invalid parameter sets).
+By default, optqsm samples the parameter space (PatchDiam1,PatchDiam2Min,PatchDiam2Max,lcyl) defined in optqsm/src/optInputs.m, constructing ~7500 models per tree (minus any invalid parameter sets).
 These values have been shown across various data to capture most of the valid parameter space, but can be readily modified to increase/reduce computation.
 
 If it not possible to permanently set the MATLAB path, the two calls to MATLAB must be modified as:
