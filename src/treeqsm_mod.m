@@ -15,7 +15,7 @@
 %
 % Copyright (C) 2013-2017 Pasi Raumonen
 
-function [] = treeqsm_mod(P,inputs)
+function [] = treeqsm_mod(P,inputs,mdir)
 
 % ---------------------------------------------------------------------
 % treeqsm_mod.M     Version of treeqsm.m modified for optqsm
@@ -56,6 +56,6 @@ function [] = treeqsm_mod(P,inputs)
 		if inputs.Tria
 			qsm(1).triangulation = triangulation;
 		end
-		save([inputs.name],'qsm');
+		save(strcat(mdir,[inputs.name]),'qsm');
 	end
 end
