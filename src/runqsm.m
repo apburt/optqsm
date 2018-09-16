@@ -18,7 +18,8 @@ function [] = runqsm(WILDCARD_PATH_TO_CLOUDS,workers)
 		if workers == 1
 			for j=1:length(inputs)
 				if validInput(inputs(j)) == true
-					if exist(strcat(inputs(j).name,'.mat'),'file') == 0
+                    disp(exist(strcat(mdir,inputs(j).name,'.mat'),'file'));
+					if exist(strcat(mdir,inputs(j).name,'.mat'),'file') == 0
 						treeqsm_mod(cloud,inputs(j),mdir);
 					end
 				end
@@ -29,7 +30,7 @@ function [] = runqsm(WILDCARD_PATH_TO_CLOUDS,workers)
 				for k=j:j+MAX_ITER_PER_POOL-1
 					if k <= length(inputs)
 						if validInput(inputs(k)) == true
-							if exist(strcat(inputs(k).name,'.mat'),'file') == 0
+							if exist(strcat(mdir,inputs(k).name,'.mat'),'file') == 0
 								vInputs = [vInputs,inputs(k)];
 							end
 						end
