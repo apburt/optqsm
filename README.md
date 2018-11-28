@@ -7,9 +7,9 @@ Automatically optimise and parallelise TreeQSM: a method for constructing struct
 optqsm wraps around TreeQSM to fully-automate (via nearest neighbour analysis) the construction and optimisation of QSMs.
 optqsm can also be used to locally parallelise the construction of QSMs. 
 
-## Prerequisites
+## Dependencies
 
-MATLAB vR2017b (https://mathworks.com) with Parallel Computing Toolbox (optional) <br />
+MATLAB vR2018b with Statistics and Machine Learning (v11.4) and Parallel Computing (v6.13) toolboxes <br />
 TreeQSM v2.30 (https://github.com/InverseTampere/TreeQSM)
 
 ## Installation

@@ -1,7 +1,7 @@
 %Andrew Burt - a.burt@ucl.ac.uk
 
 function [nndata] = dNNz(cloud,nnearest,zstep)
-	nndata = zeros(0,1);
+	nndata = [];
 	mind = min(cloud);
 	maxd = max(cloud);
 	for i = mind(3) : zstep : maxd(3)
