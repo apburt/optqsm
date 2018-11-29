@@ -7,56 +7,68 @@ function [vol,stddev] = selectOpt(qsms,savename)
 				qsms(i).rundata.inputs.PatchDiam2Max qsms(i).rundata.inputs.lcyl ...
 				qsms(i).rundata.inputs.FilRad];
 	end
+	TRUNK_POSITIONS = [0.1,0.2,0.3,0.4,0.5];
+	qsmcount = 1;
 	uinputs = unique(inputs,'rows');
-	dresults = zeros(length(uinputs),20);
+	rad = zeros(length(uinputs),length(TRUNK_POSITIONS));
 	for i = 1:length(uinputs)
-		rtmp = zeros(1,20);
-		j = 1;
-		for k = 1:length(inputs)
-			if(isequal(inputs(k,:),uinputs(i,:)))
-				rtmp(j,1) = qsms(k).pmdistance.median;
-				rtmp(j,2) = qsms(k).pmdistance.mean;
-				rtmp(j,3) = qsms(k).pmdistance.max;
-				rtmp(j,4) = qsms(k).pmdistance.std;
-				rtmp(j,5) = qsms(k).pmdistance.TrunkMedian;
-				rtmp(j,6) = qsms(k).pmdistance.TrunkMean;
-				rtmp(j,7) = qsms(k).pmdistance.TrunkMax;
-				rtmp(j,8) = qsms(k).pmdistance.TrunkStd;
-				rtmp(j,9) = qsms(k).pmdistance.BranchMedian;
-				rtmp(j,10) = qsms(k).pmdistance.BranchMean;
-				rtmp(j,11) = qsms(k).pmdistance.BranchMax;
-				rtmp(j,12) = qsms(k).pmdistance.BranchStd;
-				rtmp(j,13) = qsms(k).pmdistance.Branch1Median;
-				rtmp(j,14) = qsms(k).pmdistance.Branch1Mean;
-				rtmp(j,15) = qsms(k).pmdistance.Branch1Max;
-				rtmp(j,16) = qsms(k).pmdistance.Branch1Std;
-				rtmp(j,17) = qsms(k).pmdistance.Branch2Median;
-				rtmp(j,18) = qsms(k).pmdistance.Branch2Mean;
-				rtmp(j,19) = qsms(k).pmdistance.Branch2Max;
-				rtmp(j,20) = qsms(k).pmdistance.Branch2Std;
-				j = j + 1;
+		r_tmp = [];
+		qsmcount = 1;
+		for j = 1:length(inputs)
+			if isequal(inputs(j,:),uinputs(i,:))
+				len = 0;
+				poscount = 1;
+				for k = 1:length(qsms(j).cylinder.radius)
+					if qsms(j).cylinder.BranchOrder(k) == 0
+						len = len + qsms(j).cylinder.length(k);
+					end
+					if len > qsms(j).treedata.TrunkLength * TRUNK_POSITIONS(poscount)
+						r_tmp(qsmcount,poscount) = qsms(j).cylinder.radius(k);
+						poscount = poscount + 1;
+					end
+					if poscount == length(TRUNK_POSITIONS)+1
+						break;
+					end
+				end
+				qsmcount = qsmcount + 1;
 			end
 		end
-		dresults(i,:) = mean(rtmp);
+		r_tmp = mean(r_tmp);
+		rad(i,:) = r_tmp;
 	end
-	[~,uidx] = min(dresults(:,4));
-	oidxs = zeros(1,1);
-	j = 1;
-	for i = 1:length(inputs)
-		if(isequal(inputs(i,:),uinputs(uidx,:)))
-			oidxs(j,1) = i;
-			j = j+1;
+	dresults = zeros(length(uinputs),1);
+	for i = 1:length(uinputs)
+		ddiff = mean((max(rad)-rad(i,:))./max(rad));
+		if ddiff <= 0.1
+			qsmcount = 1;
+			tmp = [];
+			for j = 1:length(inputs)
+				if isequal(inputs(j,:),uinputs(i,:))
+					tmp(qsmcount,1) = qsms(j).pmdistance.std;
+					qsmcount = qsmcount + 1;
+				end
+			end
+			dresults(i,1) = mean(tmp);
+		else
+			dresults(i,1) = nan;
 		end
 	end
-	dists = zeros(length(oidxs),1);
+	[~,uidx] = nanmin(dresults(:,1));
+	oidxs = [];
+	j = 1;
+	for i = 1:length(inputs)
+		if isequal(inputs(i,:),uinputs(uidx,:))
+			oidxs(j,1) = i;
+			j = j + 1;
+		end
+	end
 	volumes = zeros(length(oidxs),1);
-	optmodels = cell(length(oidxs),1);
+	optmodels = {};
 	for i = 1:length(oidxs)
-		dists(i,1) = qsms(oidxs(i)).pmdistance.TrunkMean;
 		volumes(i,1) = qsms(oidxs(i)).treedata.TotalVolume;
 		optmodels{i} = qsms(oidxs(i)).rundata.inputs.name;
 	end
-	[~,oidx] = min(dists);
+	[~,oidx] = min(abs(volumes - mean(volumes)));
 	qsm = qsms(oidxs(oidx));
 	vol = mean(volumes);
 	stddev = std(volumes);

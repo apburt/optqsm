@@ -16,12 +16,10 @@
 % Copyright (C) 2013-2017 Pasi Raumonen
 
 function [] = treeqsm_mod(P,inputs,mdir)
-
-% ---------------------------------------------------------------------
-% treeqsm_mod.M     Version of treeqsm.m modified for optqsm
-%                   Andrew Burt - a.burt@ucl.ac.uk
-% ---------------------------------------------------------------------
-
+	% ---------------------------------------------------------------------
+	% treeqsm_mod.M     Version of treeqsm.m modified for optqsm
+	%                   Andrew Burt - a.burt@ucl.ac.uk
+	% ---------------------------------------------------------------------
 	rng('shuffle');
 	cover1 = cover_sets(P,inputs);
 	[cover1,Base,Forb] = tree_sets(P,cover1,inputs);
