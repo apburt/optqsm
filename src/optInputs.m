@@ -12,7 +12,7 @@ function [inputs] = optInputs(cname,dNNz1,dNNz2)
 	%variation in considered pd2 patch sizes: 100-250%
 	pd2Min = round(min(dNNz2),3);
 	pd2Max = round(max(dNNz2),3);
-	pd2Steps = 10;
+	pd2Steps = 8;
 	%
 	pd2MinStart = pd2Min * 1;
 	pd2MinEnd = pd2Min * 2.5;
@@ -22,11 +22,11 @@ function [inputs] = optInputs(cname,dNNz1,dNNz2)
 	pd2MaxEnd = pd2Max * 2.5;
 	pd2MaxInt = (pd2MaxEnd - pd2MaxStart) / (pd2Steps-1);
 	%lcyl values
-	lcyl = [3;4;5];
+	lcyl = [3;5];
 	%filrad values
 	filrad = [3.5];
 	%iterations per param set
-	N = 5;
+	N = 10;
 	i = 1;
 	for j = pd1Start : pd1Int : pd1End
 		for k = pd2MinStart : pd2MinInt : pd2MinEnd
@@ -39,18 +39,18 @@ function [inputs] = optInputs(cname,dNNz1,dNNz2)
 							input.PatchDiam2Max = l;
 							input.lcyl = lcyl(m);
 							input.FilRad = filrad(n);
-							input.BallRad1 = j * 1.1;
-							input.BallRad2 = l * 1.1;
+							input.BallRad1 = j + 0.02; %* 1.1;
+							input.BallRad2 = l + 0.01; %* 1.1;
 							input.nmin1 = 3;
 							input.nmin2 = 1;
 							input.OnlyTree = 1;
 							input.Tria = 0;
 							input.Dist = 1;
-							input.MinCylRad = 0.0025;
-							input.ParentCor = 1;
-							input.TaperCor = 1;
-							input.GrowthVolCor = 0;
-							input.GrowthVolFrac = 2.5;
+							input.MinCylRad = 0;
+							input.ParentCor = 0;
+							input.TaperCor = 0;
+							input.GrowthVolCor = 1;
+							input.GrowthVolFac = 2.5;
 							tmp1 = strsplit(char(cname),'/');
 							tmp2 = strsplit(char(tmp1(length(tmp1))),'.');
 							mname = char(strcat(tmp2(1),'-',num2str(i))); 

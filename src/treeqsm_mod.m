@@ -39,7 +39,8 @@ function [] = treeqsm_mod(P,inputs,mdir)
 		trunk = P(T,:);
 		[treedata,triangulation] = tree_data(cylinder,branch,inputs,trunk,0);
 		if inputs.Dist
-			pmdis = point_model_distance(P,cylinder);
+			pmdis = pointCylDist(P,cylinder);
+			%pmdis = point_model_distance(P,cylinder);
 		end
 		Date(2,:) = clock;
 		qsm = struct('cylinder',{},'branch',{},'treedata',{},'rundata',{},'pmdistance',{},'triangulation',{});
