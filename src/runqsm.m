@@ -46,4 +46,5 @@ function [] = runqsm(WILDCARD_PATH_TO_CLOUDS,workers)
 			end
 		end
 	end
+	exit;
 end
