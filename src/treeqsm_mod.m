@@ -20,41 +20,44 @@ function [] = treeqsm_mod(P,inputs,mdir)
 	% treeqsm_mod.M     Version of treeqsm.m modified for optqsm
 	%                   Andrew Burt - a.burt@ucl.ac.uk
 	% ---------------------------------------------------------------------
-	rng('shuffle');
-	cover1 = cover_sets(P,inputs);
-	[cover1,Base,Forb] = tree_sets(P,cover1,inputs);
-	segment1 = segments(cover1,Base,Forb);
-	segment1 = correct_segments(P,cover1,segment1,inputs,0,1,1);
-	RS = relative_size(P,cover1,segment1);
-	cover2 = cover_sets(P,inputs,RS);
-	[cover2,Base,Forb] = tree_sets(P,cover2,inputs,segment1);
-	segment2 = segments(cover2,Base,Forb);
-	segment2 = correct_segments(P,cover2,segment2,inputs,1,1,0);
-	cylinder = cylinders(P,cover2,segment2,inputs);
-	if ~isempty(cylinder.radius)
-		[branch,cylinder] = branches(segment2,cylinder);
-		T = segment2.segments{1};
-		T = vertcat(T{:});
-		T = vertcat(cover2.ball{T});
-		trunk = P(T,:);
-		[treedata,triangulation] = tree_data(cylinder,branch,inputs,trunk,0);
-		if inputs.Dist
-			pmdis = pointCylDist(P,cylinder);
-			%pmdis = point_model_distance(P,cylinder);
+	try
+		rng('shuffle');
+		cover1 = cover_sets(P,inputs);
+		[cover1,Base,Forb] = tree_sets(P,cover1,inputs);
+		segment1 = segments(cover1,Base,Forb);
+		segment1 = correct_segments(P,cover1,segment1,inputs,0,1,1);
+		RS = relative_size(P,cover1,segment1);
+		cover2 = cover_sets(P,inputs,RS);
+		[cover2,Base,Forb] = tree_sets(P,cover2,inputs,segment1);
+		segment2 = segments(cover2,Base,Forb);
+		segment2 = correct_segments(P,cover2,segment2,inputs,1,1,0);
+		cylinder = cylinders(P,cover2,segment2,inputs);
+		if ~isempty(cylinder.radius)
+			[branch,cylinder] = branches(segment2,cylinder);
+			T = segment2.segments{1};
+			T = vertcat(T{:});
+			T = vertcat(cover2.ball{T});
+			trunk = P(T,:);
+			[treedata,triangulation] = tree_data(cylinder,branch,inputs,trunk,0);
+			if inputs.Dist
+				pmdis = pointCylDist(P,cylinder);
+				%pmdis = point_model_distance(P,cylinder);
+			end
+			Date(2,:) = clock;
+			qsm = struct('cylinder',{},'branch',{},'treedata',{},'rundata',{},'pmdistance',{},'triangulation',{});
+			qsm(1).cylinder = cylinder;
+			qsm(1).branch = branch;
+			qsm(1).treedata = treedata;
+			qsm(1).rundata.inputs = inputs;
+			qsm(1).rundata.date = single(Date);
+			if inputs.Dist
+				qsm(1).pmdistance = pmdis;
+			end
+			if inputs.Tria
+				qsm(1).triangulation = triangulation;
+			end
+			save(strcat(mdir,[inputs.name]),'qsm');
 		end
-		Date(2,:) = clock;
-		qsm = struct('cylinder',{},'branch',{},'treedata',{},'rundata',{},'pmdistance',{},'triangulation',{});
-		qsm(1).cylinder = cylinder;
-		qsm(1).branch = branch;
-		qsm(1).treedata = treedata;
-		qsm(1).rundata.inputs = inputs;
-		qsm(1).rundata.date = single(Date);
-		if inputs.Dist
-			qsm(1).pmdistance = pmdis;
-		end
-		if inputs.Tria
-			qsm(1).triangulation = triangulation;
-		end
-		save(strcat(mdir,[inputs.name]),'qsm');
+	catch
 	end
 end
