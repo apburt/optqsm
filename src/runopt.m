@@ -1,6 +1,6 @@
 %Andrew Burt - a.burt@ucl.ac.uk
 
-function [] = runopt(WILDCARD_PATH_TO_MODELS)
+function [] = runopt(WILDCARD_PATH_TO_MODELS,optimisation_type)
 	results = struct('lid',{},'vol',{},'stddev',{});
 	fnames = glob(WILDCARD_PATH_TO_MODELS);
 	tmp = {};
@@ -22,7 +22,7 @@ function [] = runopt(WILDCARD_PATH_TO_MODELS)
 				count = count + 1;
 			end
 		end
-		[vol,stddev] = selectOpt(qsms,char(uniquenames(i)));
+		[vol,stddev] = selectOpt(qsms,optimisation_type,char(uniquenames(i)));
 		results(i).lid = char(uniquenames(i));
 		results(i).vol = vol;
 		results(i).stddev = stddev;

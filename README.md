@@ -4,7 +4,7 @@ Automatically optimise and parallelise TreeQSM: a method for constructing struct
 
 ## Overview
 
-optqsm wraps around TreeQSM to fully-automate (via nearest neighbour analysis) the construction and optimisation of QSMs.
+optqsm wraps around TreeQSM to fully automate (via nearest neighbour analysis) the construction and optimisation of QSMs.
 optqsm can also be used to locally parallelise the construction of QSMs. 
 
 ## Dependencies
@@ -40,7 +40,7 @@ addpath('[INSTALLATION_DIR]/optqsm/src/');
 savepath();
 ```
 
-If the user does not have sufficient privileges to call savepath(...), then addpath(...) is required at the beginning of each instance (as shown below).
+If the user does not have sufficient privileges to call savepath(...), then addpath(...) is required at the beginning of each instance (example shown below).
 
 ## Usage
 
@@ -61,25 +61,27 @@ optqsm can then be called from the command line as:
 
 ```
 cd [PROC_DIR]/models/intermediate/;
-matlab -nodisplay -r "runqsm('../clouds/*.txt',workers)";
+matlab -nodisplay -r "runqsm('../clouds/*.txt',optimisation_type,workers)";
 cd ../;
-matlab -nodisplay -r "runopt('./intermediate/*.mat')";
+matlab -nodisplay -r "runopt('./intermediate/*/*.mat',optimisation_type)";
 ```
 
-Where workers is an integer specifying the number of workers in the local parallel pool that is initialised if greater than 1.
+Where optimisation_type is a string of either 'simple' or 'full', and workers is an integer specifying the number of workers in the local parallel pool that is to be initialised if greater than 1.
+
+In 'simple' mode the theoretical optimum values of PatchDiam1, PatchDiam2Min, PatchDiam2Max are generated from vertically-resolved nearest neigbour distances.
+
+In 'full' mode, optqsm samples the parameter space (PatchDiam1,PatchDiam2Min,PatchDiam2Max,lcyl) defined in optqsm/src/optInputs.m, constructing ~3000 models per tree (minus any invalid parameter sets).
+These values have been shown across various data to capture most of the valid parameter space, but can be readily modified to increase/reduce computation.
 
 When run as above, each .mat inside [PROCESSING DIR]/models/ contains the optimised QSM + supplementary data per tree.
 The definition of parameters inside this .mat can be found in TreeQSM/src/treeqsm.m.
 This .mat can be interacted with outside MATLAB, e.g., in Python with scipy.io.loadmat() (although care is required with MATLAB not using zero-based arrays).
 
-By default, optqsm samples the parameter space (PatchDiam1,PatchDiam2Min,PatchDiam2Max,lcyl) defined in optqsm/src/optInputs.m, constructing ~6400 models per tree (minus any invalid parameter sets).
-These values have been shown across various data to capture most of the valid parameter space, but can be readily modified to increase/reduce computation.
-
 If it not possible to permanently set the MATLAB path, the two calls to MATLAB must be modified as:
 
 ```
 matlab -nodisplay -r "addpath(genpath('[INSTALLATION_DIR]/TreeQSM/src/'));addpath('[INSTALLATION_DIR]/optqsm/src/');runqsm('../clouds/*.txt',workers)";
-matlab -nodisplay -r "addpath(genpath('[INSTALLATION_DIR]/TreeQSM/src/'));addpath('[INSTALLATION_DIR]/optqsm/src/');runopt('./intermediate/*.mat')";
+matlab -nodisplay -r "addpath(genpath('[INSTALLATION_DIR]/TreeQSM/src/'));addpath('[INSTALLATION_DIR]/optqsm/src/');runopt('./intermediate/*/*.mat')";
 ```
 
 ## Authors
