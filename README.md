@@ -22,8 +22,7 @@ git clone https://github.com/InverseTampere/TreeQSM.git;
 ```
 
 The following modifications are required to [INSTALLATION_DIR]/TreeQSM/src/main_steps/tree_data.m
-* Line 258--306 require commenting out.
-* If cubic metre is preferred as the output unit of volume, lines 59--61 require removal of 1000x.
+* If cubic metre is preferred as the output unit of volume, lines 63--65 require removal of 1000x.
 
 optqsm can then be installed as:
 
