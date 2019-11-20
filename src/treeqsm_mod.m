@@ -17,10 +17,11 @@
 
 function [] = treeqsm_mod(P,inputs,mdir)
 	% ---------------------------------------------------------------------
-	% treeqsm_mod.M     Version of treeqsm.m modified for optqsm
+	% treeqsm_mod.m     Version of treeqsm.m modified for optqsm
 	%                   Andrew Burt - a.burt@ucl.ac.uk
 	% ---------------------------------------------------------------------
 	try
+		pause(randi(120));
 		timestamp = clock;
         	rng(sum(100*timestamp),'twister');
 		cover1 = cover_sets(P,inputs);

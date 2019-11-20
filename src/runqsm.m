@@ -1,6 +1,7 @@
 %Andrew Burt - a.burt@ucl.ac.uk
 
 function [] = runqsm(WILDCARD_PATH_TO_CLOUDS,optimisation_type,workers)
+	rng('shuffle')
 	MAX_ITER_PER_POOL = 250;
 	MAX_TIME_PER_ITER = 60*60*5;
 	fnames = glob(WILDCARD_PATH_TO_CLOUDS);
