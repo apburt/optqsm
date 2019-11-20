@@ -9,8 +9,8 @@ optqsm can also be used to locally parallelise the construction of QSMs.
 
 ## Dependencies
 
-MATLAB vR2018b with Statistics and Machine Learning (v11.4) and Parallel Computing (v6.13) toolboxes <br />
-TreeQSM v2.30 (https://github.com/InverseTampere/TreeQSM)
+MATLAB vR2019b with Statistics and Machine Learning and Parallel Computing toolboxes <br />
+TreeQSM v2.3.1 (https://github.com/InverseTampere/TreeQSM)
 
 ## Installation
 
