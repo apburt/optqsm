@@ -21,8 +21,6 @@ function [] = treeqsm_mod(P,inputs,mdir)
 	%                   Andrew Burt - a.burt@ucl.ac.uk
 	% ---------------------------------------------------------------------
 	try
-		timestamp = clock;
-        	rng(sum(100*timestamp),'twister');
 		cover1 = cover_sets(P,inputs);
 		[cover1,Base,Forb] = tree_sets(P,cover1,inputs);
 		segment1 = segments(cover1,Base,Forb);
@@ -33,27 +31,32 @@ function [] = treeqsm_mod(P,inputs,mdir)
 		segment2 = segments(cover2,Base,Forb);
 		segment2 = correct_segments(P,cover2,segment2,inputs,1,1,0);
 		cylinder = cylinders(P,cover2,segment2,inputs);
-		[branch,cylinder] = branches(segment2,cylinder);
-		T = segment2.segments{1};
-		T = vertcat(T{:});
-		T = vertcat(cover2.ball{T});
-		trunk = P(T,:);
-		[treedata,triangulation] = tree_data(cylinder,branch,inputs,trunk,0);
-		qsm = struct('cylinder',{},'branch',{},'treedata',{},'rundata',{},'pmdistance',{},'triangulation',{});
-		qsm(1).cylinder = cylinder;
-		qsm(1).branch = branch;
-		qsm(1).treedata = treedata;
-		qsm(1).rundata.inputs = inputs;
-		qsm(1).rundata.timestamp = timestamp;
-		if inputs.Dist
-			pmdis = pointCylDist(P,cylinder);
-			qsm(1).pmdistance = pmdis;
-			%pmdis = point_model_distance(P,cylinder);
+		if ~isempty(cylinder.radius)
+			[branch,cylinder] = branches(segment2,cylinder);
+			T = segment2.segments{1};
+			T = vertcat(T{:});
+			T = vertcat(cover2.ball{T});
+			trunk = P(T,:);
+			[treedata,triangulation] = tree_data(cylinder,branch,inputs,trunk,0);
+			if inputs.Dist
+				pmdis = pointCylDist(P,cylinder);
+				%pmdis = point_model_distance(P,cylinder);
+			end
+			Date(2,:) = clock;
+			qsm = struct('cylinder',{},'branch',{},'treedata',{},'rundata',{},'pmdistance',{},'triangulation',{});
+			qsm(1).cylinder = cylinder;
+			qsm(1).branch = branch;
+			qsm(1).treedata = treedata;
+			qsm(1).rundata.inputs = inputs;
+			qsm(1).rundata.date = single(Date);
+			if inputs.Dist
+				qsm(1).pmdistance = pmdis;
+			end
+			if inputs.Tria
+				qsm(1).triangulation = triangulation;
+			end
+			save(strcat(mdir,[inputs.name]),'qsm');
 		end
-		if inputs.Tria
-			qsm(1).triangulation = triangulation;
-		end
-		save(strcat(mdir,[inputs.name]),'qsm');
 	catch
 	end
 end
