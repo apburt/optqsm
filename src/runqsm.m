@@ -9,12 +9,12 @@ function [] = runqsm(WILDCARD_PATH_TO_CLOUDS,optimisation_type,workers)
 		cloud = load(char(fnames(i)));
 		dNNz1 = dNNz(cloud,3,8); 
 		dNNz2 = dNNz(cloud,1,8);
-        if optimisation_type == "full"
-    		inputs = optInputs(fnames(i),dNNz1,dNNz2);
-        elseif optimisation_type == "simple"
-            inputs = singleInput(fnames(i),dNNz1,dNNz2);
-        end
-        dispInputs(inputs);
+	        if optimisation_type == "full"
+    			inputs = optInputs(fnames(i),dNNz1,dNNz2);
+		elseif optimisation_type == "simple"
+			inputs = singleInput(fnames(i),dNNz1,dNNz2);
+		end
+		dispInputs(inputs);
 		cname = strsplit(inputs(1).name,'-');
 		if(exist(cname{1},'dir')) == 0
 			mkdir(cname{1});

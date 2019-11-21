@@ -22,7 +22,11 @@ function [] = runopt(WILDCARD_PATH_TO_MODELS,optimisation_type)
 				count = count + 1;
 			end
 		end
-		[vol,stddev] = selectOpt(qsms,optimisation_type,char(uniquenames(i)));
+	        if optimisation_type == "simple"
+			[vol,stddev] = selectSimpleOpt(qsms,char(uniquenames(i)));
+    		elseif optimisation_type == "Full"
+			[vol,stddev] = selectFullOpt(qsms,optimisation_type,char(uniquenames(i)));
+		end
 		results(i).lid = char(uniquenames(i));
 		results(i).vol = vol;
 		results(i).stddev = stddev;

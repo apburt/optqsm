@@ -1,6 +1,6 @@
 %Andrew Burt - a.burt@ucl.ac.uk
 
-function [vol,stddev] = selectOpt(qsms,optimisation_type,savename)
+function [vol,stddev] = selectFullOpt(qsms,optimisation_type,savename)
 	inputs = zeros(length(qsms),5);
 	for i = 1:length(qsms)
 		inputs(i,:) = [qsms(i).rundata.inputs.PatchDiam1 qsms(i).rundata.inputs.PatchDiam2Min ...
