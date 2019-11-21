@@ -7,8 +7,8 @@ function [] = runqsm(WILDCARD_PATH_TO_CLOUDS,optimisation_type,workers)
 	fnames = glob(WILDCARD_PATH_TO_CLOUDS);
 	for i=1:length(fnames)
 		cloud = load(char(fnames(i)));
-		dNNz1 = dNNz(cloud,3,10); 
-		dNNz2 = dNNz(cloud,1,10);
+		dNNz1 = dNNz(cloud,3,8); 
+		dNNz2 = dNNz(cloud,1,8);
         if optimisation_type == "full"
     		inputs = optInputs(fnames(i),dNNz1,dNNz2);
         elseif optimisation_type == "simple"
