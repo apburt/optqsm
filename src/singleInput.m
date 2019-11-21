@@ -3,7 +3,7 @@
 function [inputs] = singleInput(cname,dNNz1,dNNz2)
 	inputs = struct([]);
 	lcyl = 6;
-	filrad = 3;
+	filrad = 3.0;
 	N = 10;
 	for i=1:N
 		input.PatchDiam1 = round(prctile(dNNz1,100),3) * 1.0 * 2.0;

@@ -2,29 +2,29 @@
 
 function [inputs] = optInputs(cname,dNNz1,dNNz2)
 	inputs = struct([]);
-	%variation in considered pd1 patch sizes: 150-300% dNNz1
-	pd1 = round(prctile(dNNz1,75),3); 
+	%variation in considered pd1 patch sizes: 175-400% dNNz1
+	pd1 = round(prctile(dNNz1,100),3) * 1.0;
 	pd1Steps = 4;
-	pd1Start = pd1 * 3.0;
-	pd1End = pd1 * 5.0;
+	pd1Start = pd1 * 1.5;
+	pd1End = pd1 * 4.0;
 	pd1Int =  (pd1End - pd1Start) / (pd1Steps-1);
 	%
-	%variation in considered pd2 patch sizes: 150-300% dNNz2
-	pd2Min = round(prctile(dNNz2,25),3);
-	pd2Max = round(prctile(dNNz2,75),3);
+	%variation in considered pd2 patch sizes: 175-400% dNNz2
+	pd2Min = round(prctile(dNNz2,0),3) * 1.0;
+	pd2Max = round(prctile(dNNz2,100),3) * 1.0;
 	pd2Steps = 6;
 	%
-	pd2MinStart = pd2Min * 3.0;
-	pd2MinEnd = pd2Min * 5.0;
+	pd2MinStart = pd2Min * 1.5;
+	pd2MinEnd = pd2Min * 4.0;
 	pd2MinInt = (pd2MinEnd - pd2MinStart) / (pd2Steps-1);
 	%
-	pd2MaxStart = pd2Max * 3.0;
-	pd2MaxEnd = pd2Max * 5.0;
+	pd2MaxStart = pd2Max * 1.5;
+	pd2MaxEnd = pd2Max * 4.0;
 	pd2MaxInt = (pd2MaxEnd - pd2MaxStart) / (pd2Steps-1);
 	%lcyl values
-	lcyl = [4;6];
+	lcyl = [3;6];
 	%filrad values
-	filrad = [3.5];
+	filrad = [3.0];
 	%iterations per param set
 	N = 10;
 	i = 1;
