@@ -4,40 +4,39 @@ Automatically optimise and parallelise TreeQSM: a method for constructing struct
 
 ## Overview
 
-optqsm wraps around TreeQSM to fully automate the construction and optimisation of QSMs.
-optqsm can also be used to locally parallelise the construction of QSMs. 
+optqsm wraps around TreeQSM to fully automate the construction of quantitative structural models (QSMs) from individual tree point clouds.
+optqsm can also be used to locally parallelise TreeQSM.
 
-optqsm derives TreeQSM input parameters by analysing the vertically-resolved nearest neighbour distances across the input point cloud.
-Two modes are available: i) simple mode estimates a single set of parameters from this analysis.
-ii) full mode samples the parameter space, with the optimal parameters selected by minimising point-to-cylinder distances. 
-
+optqsm automatically selects TreeQSM input parameters by analysing the vertically-resolved nearest neighbour distances across the input point cloud.
 The expectation of the input point cloud is that it provides a reasonably complete sample of the underlying tree surface, with minimal occlusion effects.
-It is also expected that the point cloud contains only wood points; for segmenting leaf returns from point clouds consider using TLSeparation (https://github.com/TLSeparation).
+It is also expected that the point cloud contains only returns from woody surfaces; for segmenting leaf returns consider using TLSeparation (https://github.com/TLSeparation).
 
 ## Dependencies
 
 MATLAB vR2019b with Statistics and Machine Learning and Parallel Computing toolboxes <br />
-TreeQSM v2.3.1 (https://github.com/InverseTampere/TreeQSM)
+TreeQSM v2.3.2 (https://github.com/InverseTampere/TreeQSM)
 
 ## Installation
 
-With MATLAB installed, TreeQSM can be installed via: 
+TreeQSM v2.3.2 can be installed via: 
 
 ```
 cd [INSTALLATION_DIR];
 git clone https://github.com/InverseTampere/TreeQSM.git;
+cd TreeQSM;
+git checkout tags/v.2.3.2;
 ```
 
-The following modifications are required to [INSTALLATION_DIR]/TreeQSM/src/main_steps/tree_data.m
-* If cubic metre is preferred as the output unit of volume, lines 63--65 require removal of 1000x.
+* If cubic metre is preferred as the output unit of volume, lines 74--76 of [INSTALLATION_DIR]/TreeQSM/src/main_steps/tree_data.m require removal of the 1000x entries.
 
 optqsm can then be installed as:
 
 ```
+cd [INSTALLATION_DIR];
 git clone https://github.com/apburt/optqsm.git;
 ```
 
-The paths to both TreeQSM and optqsm must then be set in MATLAB, e.g.,:
+The paths to both TreeQSM and optqsm require setting in MATLAB, i.e.,:
 
 ```
 matlab -nodisplay;
@@ -46,50 +45,50 @@ addpath('[INSTALLATION_DIR]/optqsm/src/');
 savepath();
 ```
 
-If the user does not have sufficient privileges to call savepath(...), then addpath(...) is required at the beginning of each MATLAB instance (example shown below).
+If the user does not have sufficient privileges to call savepath(...), these addpath(...) calls will be required at the beginning of each MATLAB instance.
 
 ## Usage
 
-Input to optqsm are the paths (wildcards permitted) to N tree-level point clouds (ASCII, 3-column (x,y,z), no header). E.g., using the following example file structure:
+The input to optqsm are the paths (wildcards permitted) to N tree-level point clouds (ASCII, 3-column (x,y,z), no header). 
+The example here uses the following file structure:
 
 ```
-[PROC_DIR]
+[PROCESSING_DIR]
 ├───clouds
 │   ├───plot1_1.txt
-│   ├───plot1_2.txt
-│   ├───plot1_....
+│   ├───plot1_...txt
+│   ├───plot1_N.txt
 └───models
     ├───intermediate
 ```
 
-With the naming convention of each point cloud following [PLOT_ID]_[TREE_ID].txt.
-optqsm can then be called from the command line as:
+Where the naming of each point cloud strictly follows: [PLOT_ID]_[TREE_ID].txt.
+
+The runqsm function can then be called from the command line as:
 
 ```
-cd [PROC_DIR]/models/intermediate/;
-matlab -nodisplay -r "runqsm('../../clouds/*.txt',optimisation_type,workers)";
+cd [PROCESSING_DIR]/models/intermediate/;
+matlab -nodisplay -r "runqsm('../../clouds/*.txt',workers)";
+```
+
+This command will calculate the vertically-resolved nearest neighbour distance for each point cloud, and estimate the optimum values of PatchDiam1, PatchDiam2Min, PatchDiam2Max, BallRad1 and BallRad2.
+These parameter sets will then be used to construct 10 QSMs for each point cloud.
+
+Workers is an integer specifying the number of workers in the local parallel pool that will be initialised if > 1.
+
+The optqsm function can then be called as:
+
+```
 cd ../;
-matlab -nodisplay -r "runopt('./intermediate/*/*.mat',optimisation_type)";
+matlab -nodisplay -r "runopt('./intermediate/*/*.mat')";
 ```
 
-Where optimisation_type is a string containing either 'simple' or 'full', and workers is an integer specifying the number of workers in the local parallel pool that is to be initialised if greater than 1.
+Which will return plot1_1.mat ... plot1_N.mat, and plot1.dat  
+The .dat file reports the mean volume and standard deviation across the 10 QSMs generated from each input point cloud. 
+The .mat files are the QSM in each set of 10 whose volume was closest to the mean volume. 
 
-In 'simple' mode the optimum values of PatchDiam1, PatchDiam2Min, PatchDiam2Max, BallRad1 and BallRad2 are estimated from vertically-resolved nearest neighbour distances.
-
-In 'full' mode, optqsm samples the parameter space (PatchDiam1,PatchDiam2Min,PatchDiam2Max,lcyl,BallRad1,BallRad2) defined in optqsm/src/optInputs.m, constructing ~3000 models per tree (minus any invalid parameter sets).
-The range and resolution of this parameter space can be readily modified to increase/reduce computation.
-
-When run as above, [PROCESSING DIR]/models/ contains the optimised QSM + supplementary data per tree.
-The definition of parameters inside this .mat can be found in TreeQSM/src/treeqsm.m.
-This .mat can be interacted with outside MATLAB, e.g., in Python with scipy.io.loadmat() (although care is required with MATLAB not using zero-based arrays).
-The [PROCESSING DIR]/models/intermediate/[PLOT_ID]_[TREE_ID]/ folders contain all intermediate QSMs generated during the run.
-
-If it not possible to permanently set the MATLAB path, the two calls to MATLAB must be modified as:
-
-```
-matlab -nodisplay -r "addpath(genpath('[INSTALLATION_DIR]/TreeQSM/src/'));addpath('[INSTALLATION_DIR]/optqsm/src/');runqsm('../clouds/*.txt',workers)";
-matlab -nodisplay -r "addpath(genpath('[INSTALLATION_DIR]/TreeQSM/src/'));addpath('[INSTALLATION_DIR]/optqsm/src/');runopt('./intermediate/*/*.mat')";
-```
+The definition of parameters inside the .mat files can be found in [INSTALLATION_DIR]/TreeQSM/src/treeqsm.m. 
+They can be interacted with outside MATLAB, e.g., in Python with scipy.io.loadmat() (although care is required with MATLAB not using zero-based arrays). 
 
 ## Authors
 

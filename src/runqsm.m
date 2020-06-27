@@ -1,6 +1,7 @@
 %Andrew Burt - a.burt@ucl.ac.uk
 
-function [] = runqsm(WILDCARD_PATH_TO_CLOUDS,optimisation_type,workers)
+function [] = runqsm(WILDCARD_PATH_TO_CLOUDS,workers)
+%function [] = runqsm(WILDCARD_PATH_TO_CLOUDS,optimisation_type,workers)
 	rng('shuffle')
 	MAX_ITER_PER_POOL = 250;
 	MAX_TIME_PER_ITER = 60*60*5;
@@ -9,11 +10,11 @@ function [] = runqsm(WILDCARD_PATH_TO_CLOUDS,optimisation_type,workers)
 		cloud = load(char(fnames(i)));
 		dNNz1 = dNNz(cloud,3,8); 
 		dNNz2 = dNNz(cloud,1,8);
-	        if optimisation_type == "full"
-    			inputs = optInputs(fnames(i),dNNz1,dNNz2);
-		elseif optimisation_type == "simple"
+	        %if optimisation_type == "full"
+    		%	inputs = optInputs(fnames(i),dNNz1,dNNz2);
+		%elseif optimisation_type == "simple"
 			inputs = singleInput(fnames(i),dNNz1,dNNz2);
-		end
+		%end
 		dispInputs(inputs);
 		cname = strsplit(inputs(1).name,'-');
 		if(exist(cname{1},'dir')) == 0
